@@ -1,3 +1,12 @@
+/*
+
+PURPOSE OF FILE:
+Handling input/output
+and
+starting the program
+
+*/
+
 #include <stdio.h>
 #include "solver.h"
 
