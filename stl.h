@@ -20,6 +20,8 @@ void list_set(list*, int, void*);
 void *list_get(list*, int);
 void list_delete(list*, int);
 void list_free(list*);
+void list_swap(list*, int, int);
+void list_sort(list*);
 
 //STACK
 

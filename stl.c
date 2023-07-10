@@ -63,6 +63,25 @@ void list_free(list *v) {
     free(v->items);
 }
 
+void list_swap(list* s, int i, int j) {
+    void* one = list_get(s, i);
+    void* two = list_get(s, j);
+    void* temp = one;
+    list_set(s, i, two);
+    list_set(s, j, temp);
+}
+
+void list_sort(list* s) {
+    int leng = s->size;
+    for (int i=0; i<leng-1; i++) {
+        for (int j=i+1; j<leng; j++) {
+            if (*((int*)list_get(s, i)) > *((int*)list_get(s, j))) {
+                list_swap(s, i, j);
+            }
+        }
+    }
+}
+
 //STACK
 
 void stack_init(stack* s) {

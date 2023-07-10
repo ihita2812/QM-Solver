@@ -2,13 +2,42 @@
 
 void Implicaant(int _size, struct Implicant i) {
     i.size = _size;
-    //allocate size*sizeof(int) memory to array
     i.array = (int*)malloc(_size * sizeof(int));
 }
 
 void Implicant(int _size, struct Implicant i, struct Implicant i1, struct Implicant i2) {
     //create new implicant with size. i1.array and i2.array are merged, sorted and added to array
+    i.size = _size;
+    i.array = (int*)malloc(_size * sizeof(int));
 }
+
+int equal_implicants(struct Implicant i1, struct Implicant i2) {
+    if (i1.size != i2.size) return 0;
+
+    for (int temp=0; temp<i1.size; temp++) {
+        if (i1.array[temp] != i2.array[temp]) return 0;
+    }
+    return 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //m is the minterm number (0 to 2^(N-1))
 //n is N
@@ -21,13 +50,6 @@ int num_ones(int m, int n) {
         return num_ones(m-this, n)+1;
     } else {
         return num_ones(m, n-1);
-    }
-}
-
-void allocate_place() {
-    for (int i=0; i<V; i++) {
-        int m = valid_minterms[i];
-        num_ones(m,N);
     }
 }
 
@@ -57,4 +79,10 @@ char* string(char* a) {
     str_len = s_ind;
 
     return s;
+}
+
+int is_power_of_2(int x) {
+    double log = log2(x);
+    if (floor(log) == ceil(log)) return 1;
+    else return 0;
 }
