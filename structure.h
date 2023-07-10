@@ -4,7 +4,7 @@
 #include "stl.h"
 
 struct Implicant {
-    int* array; //integer array of size in sorted order
+    int* array; //integer array of size = size in sorted order
     int size;
 };
 
@@ -18,6 +18,7 @@ struct BucketStore {
     int y;
     // stack<Bucket*> store;
     // stack<Implicant*> store; ?
+    stack store;
 };
 
 #endif
