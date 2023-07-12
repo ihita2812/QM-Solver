@@ -1,3 +1,10 @@
+#ifndef SOLVER_H_
+#define SOLVER_H_
+
 #include "helper.h"
 
-struct BucketStore find_implicants(list minterms);
+extern struct BucketStore* find_implicants(list);
+
+extern struct Bucket* prime_implicants(struct BucketStore);
+
+#endif
