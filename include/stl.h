@@ -18,6 +18,7 @@ static void list_resize(list*, int);
 void list_add(list*, void*);
 void list_set(list*, int, void*);
 void *list_get(list*, int);
+int list_max(list*);
 void list_delete(list*, int);
 void list_free(list*);
 void list_swap(list*, int, int);

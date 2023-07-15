@@ -20,7 +20,6 @@ int main() {
     // arr[1] = '0';
     // arr[2] = dash;
     // arr[3] = '0';
-
     // char* ans = string(arr);
     // for (int i=0; i<str_len; i++) {
     //     printf("%c", *(ans+i));
@@ -37,71 +36,48 @@ int main() {
     
     unsigned int a=0;
     list_add(&terms, &a);
-    unsigned int b=3;
+    unsigned int b=1;
     list_add(&terms, &b);
-    unsigned int c=4;
+    unsigned int c=2;
     list_add(&terms, &c);
-    unsigned int d=8;
+    unsigned int d=5;
     list_add(&terms, &d);
-    unsigned int e=9;
+    unsigned int e=6;
     list_add(&terms, &e);
-    unsigned int f=12;
+    unsigned int f=7;
     list_add(&terms, &f);
+    unsigned int g=8;
+    list_add(&terms, &g);
+    unsigned int h=9;
+    list_add(&terms, &h);
+    unsigned int i=10;
+    list_add(&terms, &i);
+    unsigned int j=14;
+    list_add(&terms, &j);
     //------------------------------------------------------------------------
     
 
 
     
     //-----------------------------FOR TESTING FIND_IMPLICANTS FUNCTION-----------------------------
-    printf("\nall implicants:\n");
     // struct BucketStore* lol = find_implicants(terms);
-    // printf("size of main stack is %d\n", (lol->store).size);
+    // printf("no. of implicants: %d\n", (lol->store).size);
 
-    /*
-    int i= 1;
-    while (lol->store.size) {
-        // printf("Level %d\n\n", i);
+    // while (lol->store.size) {
+    //     // printf("Level %d\n\n", i);
 
-        struct Bucket* is = (struct Bucket*)stack_top(&(lol->store));
-        for (int temp=0; temp<is->implicants.size; temp++) {
-            struct Implicant* h = (struct Implicant*)list_get(&is->implicants, temp);
-            for (int temp3=0; temp3<h->size; temp3++) {
-                printf("%u ", h->array[temp3]);
-            }
-            printf("\n");
-        }
-        
+    //     struct Bucket* is = (struct Bucket*)stack_top(&(lol->store));
+    //     for (int temp=0; temp<is->implicants.size; temp++) {
+    //         struct Implicant* h = (struct Implicant*)list_get(&is->implicants, temp);
+    //         for (int temp3=0; temp3<h->size; temp3++) {
+    //             printf("%u ", h->array[temp3]);
+    //         }
+    //         printf("\n");
+    //     }
 
-        // int size = sizeof(is)/sizeof(struct Bucket*);
-        // printf("\nnumber of buckets is %d\n", size);
-
-        // for (int temp=0; temp<size; temp++) {
-        //     printf("bucket number %d\n\n", temp);
-        //     struct Bucket* this = is[temp];
-        //     printf("\nnumber of implicants is %d\n", this->implicants.size);
-        //     for (int temp2=0; temp2<this->implicants.size; temp2++){
-        //         printf("implicant number %d\n\n", temp2);
-        //         struct Implicant* h = (struct Implicant*)list_get(&this->implicants, temp2);
-        //         for (int temp3=0; temp3<h->size; temp3++) {
-        //             printf("%u ", h->array[temp3]);
-        //         }
-        //         printf("\n");
-        //     }
-        // }
-
-    //     // for (int temp=0; temp<is->size; temp++) {
-    //     //     struct Implicant h = *(struct Implicant*)list_get(is, temp);
-    //     //     printf("Implicant %d:\n", temp);
-    //     //     for (int temp2=0; temp2<h.size; temp2++) {
-    //     //         printf("%d ", h.array[temp2]);
-    //     //     }
-    //     //     printf("\n");
-    //     // }
-
-        stack_pop(&(lol->store));
-        i++;
-    }
-    */
+    //     stack_pop(&(lol->store));
+    // }
+    
     //----------------------------------------------------------------------------------------------
 
 
@@ -120,6 +96,23 @@ int main() {
         printf("\n");
     }
     //-----------------------------------------------------------------------------------------------
+
+
+
+
+    //-----------------------------FOR TESTING ESS_PRIME_IMPLICANTS FUNCTION-----------------------------
+    struct Bucket* lol3 = ess_prime_implicants(terms, lol2->implicants);
+    printf("\nno. of essential prime implicants: %d\n", (lol3->implicants).size);
+
+    for (int i=0; i<(lol3->implicants).size; i++) {
+        struct Implicant* h = (struct Implicant*)list_get(&lol3->implicants, i);
+        for (int j=0; j<h->size; j++) {
+            printf("%u ", h->array[j]);
+        }
+        printf("\n");
+    }
+    //---------------------------------------------------------------------------------------------------    
+
 
     return 0;
 }

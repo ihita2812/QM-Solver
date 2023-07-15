@@ -7,4 +7,6 @@ extern struct BucketStore* find_implicants(list);
 
 extern struct Bucket* prime_implicants(struct BucketStore);
 
+struct Bucket* ess_prime_implicants(list, list);
+
 #endif

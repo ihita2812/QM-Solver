@@ -1,7 +1,7 @@
 //things to do:
-//1. power_of_2 calculation                                         DONE
-//2. if implicant x doesnt already exist in nbucket[i].implicants   DONE
-//3. calculate initial size of bucket                               DONE
+//1. power_of_2 calculation                                         count
+//2. if implicant x doesnt already exist in nbucket[i].implicants   count
+//3. calculate initial size of bucket                               count
 //4. N the big N
 //5. calculation of number of 1's
 //6. improve list_sort
@@ -100,8 +100,13 @@ struct BucketStore* find_implicants(list minterms) {
                     // for(int tempa=0; tempa<i0->size; tempa++) {
                     //     printf("%d : %u\n", tempa, i0->array[tempa]);
                     // }
+                    int valid = 1;
+
+                    if ((is_power_of_2(i0->array[0]) && diff>0)
+                        ||
+                        (is_power_of_2(i1->array[0]) && diff<0)) valid = 0;
                     
-                    if (is_power_of_2(diff)) {
+                    if (is_power_of_2(diff) && valid) {
                         // printf("checking if they shall be grouped\n");
                         add = 1;
                         for (int l=1; l<leng; l++) {
@@ -188,7 +193,9 @@ struct Bucket* prime_implicants(struct BucketStore all_implicants) {
     primes = (struct Bucket*)malloc(sizeof(struct Bucket*));
     list_init(&primes->implicants);
     
-    stack implicants = all_implicants.store;
+    stack implicants;
+    stack_init(&implicants);
+    implicants = all_implicants.store;
 
     while (implicants.size) {
         struct Bucket* current = stack_top(&implicants);
@@ -216,3 +223,109 @@ struct Bucket* prime_implicants(struct BucketStore all_implicants) {
     return primes;
 }
 
+struct Bucket* ess_prime_implicants(list minterms, list prime_implicants) {
+    struct Bucket* ess_primes;
+    ess_primes = (struct Bucket*)malloc(sizeof(struct Bucket*));
+    list_init(&ess_primes->implicants);
+
+    unsigned int max_minterm = *(unsigned int*)list_get(&minterms, list_max(&minterms));
+    
+    //done_array initialised to 0
+    //to keep track if the minterm is done or not
+    //"done" means atleast one implicant in ess_primes coveres it
+    int* done_array;
+    done_array = (int*)malloc(sizeof(int) * (int)(max_minterm+1));
+    for (int temp=0; temp<=max_minterm; temp++) {
+        done_array[temp] = 0;
+    }
+
+    //step 1
+    //taking the initial essential prime implicants
+    for (int i=0; i<minterms.size; i++) {
+        unsigned int m = *(unsigned int*)list_get(&minterms, i);
+        int covered = 0;
+
+        struct Implicant* current_impl;
+        int current_idx;
+        for (int j=0; j<prime_implicants.size; j++) {
+            struct Implicant* impl = (struct Implicant*)list_get(&prime_implicants, j);
+    
+            for (int k=0; k<impl->size; k++) {
+                if (impl->array[k] == m) {
+                    current_impl = impl;
+                    current_idx = j;
+                    covered++;
+                    break;
+                }
+            }
+        }
+
+        if (covered == 1) {
+            list_add(&ess_primes->implicants, current_impl);
+            list_delete(&prime_implicants, current_idx);
+        }
+    }
+
+    
+    int covered_minterms = 0;
+    while (covered_minterms != minterms.size) {
+
+        //step 1a
+        //all minterms in essential prime implicants are marked as done
+        for (int i=0; i<((ess_primes->implicants).size); i++) {
+            struct Implicant* impl = (struct Implicant*)list_get(&ess_primes->implicants, i);
+
+            for (int j=0; j<impl->size; j++) {
+                if (done_array[(int)(impl->array[j])] != 1) {
+                    done_array[(int)(impl->array[j])] = 1;
+                    covered_minterms++;
+                }
+            }
+        }
+
+        if (covered_minterms != minterms.size) {
+
+            //step 2
+            //prime implicants not covering any of the left minterms are removed
+            for (int i=0; i<prime_implicants.size; i++) {
+                struct Implicant* impl = (struct Implicant*)list_get(&prime_implicants, i);
+
+                int covered = 0;
+                for (int j=0; j<impl->size; j++) {
+                    if (done_array[(int)(impl->array[j])] == 0) covered++;
+                }
+
+                if (covered == 0) {
+                    list_delete(&prime_implicants, i);
+                    i--;
+                }
+            }
+
+            //step 3
+            //prime implicant covering max no. of left minterms is added
+            struct Implicant* max_covering_impl;
+            int max_covered = 0;
+            for (int i=0; i<prime_implicants.size; i++) {
+                struct Implicant* impl = (struct Implicant*)list_get(&prime_implicants, i);
+
+                int covered = 0;
+                for (int j=0; j<impl->size; j++) {
+                    if (done_array[(int)(impl->array[j])] == 0) covered++;
+                }
+
+                if (covered > max_covered) {
+                    max_covered = covered;
+                    max_covering_impl = impl;
+                }
+            }
+            if (max_covered != 0) {
+                list_add(&ess_primes->implicants, max_covering_impl);
+            }
+
+        }
+
+    }
+
+    return ess_primes;
+    
+}

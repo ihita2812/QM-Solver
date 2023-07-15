@@ -60,6 +60,18 @@ void* list_get(list* v, int index) {
     }
 }
 
+//ONLY WORKS FOR UNSIGNED INT
+int list_max(list* l) {
+    int max_index = 0;
+
+    for (int i=1; i<l->size; i++) {
+        if (*(unsigned int*)list_get(l, i) > *(unsigned int*)list_get(l, max_index))
+        max_index = i;
+    }
+
+    return max_index;
+}
+
 void list_delete(list *v, int index) {
     // printf("\nDEBUG: list_delete was called\n");
     if (index < 0 || index >= v->size)
@@ -67,7 +79,7 @@ void list_delete(list *v, int index) {
  
     v->items[index] = NULL;
     int i;
-    for (i = 0; i < v->size - 1; i++) {
+    for (i = index; i < v->size - 1; i++) {
         v->items[i] = v->items[i + 1];
         v->items[i + 1] = NULL;
     }
@@ -108,8 +120,8 @@ void stack_init(stack* s) {
     s->capacity = 1;
     s->size = 0;
     s->items = malloc(sizeof(void *));
-    if (s->items) printf("init complete\n");
-    else printf("init failed\n");
+    // if (s->items) printf("init complete\n");
+    // else printf("init failed\n");
 }
 
 static void stack_resize(stack* s, int capacity) {
