@@ -23,33 +23,9 @@ void Implicaant(int _size, struct Implicant* i) {
 
 void Implicaaant(int _size, struct Implicant* i, struct Implicant i1, struct Implicant i2) {
 
-    // printf("during combining, values of i0->array are:\n");
-    // for(int tempa=0; tempa<i1.size; tempa++) {
-    //     printf("%d : %u\n", tempa, i1.array[tempa]);
-    // }
-
-    // printf("hi?\n");
-    //create new implicant with size. i1.array and i2.array are merged, sorted and added to array
     (*i).size = _size;
-    // printf("mallocing\n");
     (*i).array = (unsigned int*)malloc(_size * sizeof(unsigned int));
-    // if (i->array) printf("DEBUG: implicant(2) was called and mp fully done\n");
-    // else printf("oops for implicant(2)!\n");
-    // printf("malloce'd\n");
-    // for (int temp=0; temp<=i1.size; temp+=2) {
-    //     // printf("half the size of combined implicant is %d\n", i1->size);
-    //     // printf("size of combined implicant is %d\n", i->size);
-        
-    //     if (_size == 4) printf("assigning %u to position %d\n", i1.array[temp], temp);
-    //     (*i).array[temp] = i1.array[temp];
-    //     if (_size == 4) printf("assigned %u to position %d\n", i->array[temp], temp);
-
-    //     if (_size == 4) printf("assigning %u to position %d\n", i2.array[temp], temp+1);
-    //     (*i).array[temp+1] = i2.array[temp];
-    //     if (_size == 4) printf("assigned %u to position %d\n", i->array[temp+1], temp+1);
-
-    // }
-
+    
     for (int temp = 0; temp < i1.size; temp++) {
         i->array[temp] = i1.array[temp];
     }
@@ -61,17 +37,10 @@ void Implicaaant(int _size, struct Implicant* i, struct Implicant i1, struct Imp
 }
 
 int equal_implicants(struct Implicant* i1, struct Implicant* i2) {
-    if (i1->size != i2->size) {
-        // printf("size dont match\n");
-        return 0;
-    }
+    if (i1->size != i2->size) return 0;
 
     for (int temp=0; temp<i1->size; temp++) {
-        // printf("comparing %d : %d\n", i1->array[temp], i2->array[temp]);
-        if (i1->array[temp] != i2->array[temp]) {
-            // printf("%dth position is diff\n", temp);
-            return 0;
-        }
+        if (i1->array[temp] != i2->array[temp]) return 0;
     }
 
     return 1;
@@ -95,23 +64,6 @@ int is_superset(struct Implicant new, struct Implicant old) {
     return 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //m is the minterm number (0 to 2^(N-1))
 //n is N
 int num_ones(int m, int n) {
@@ -126,7 +78,8 @@ int num_ones(int m, int n) {
     }
 }
 
-char* string(char* a) {
+//takes string of '0' '1' or '-' and converts it to abc format
+char* abc_convert(char* a) {
     static char s[52];
     int s_ind = 0;
 
@@ -160,3 +113,57 @@ int is_power_of_2(int x) {
     if (floor(log) == ceil(log)) return 1;
     else return 0;
 }
+
+//converts implicant x to string of '1', '0' or '-'
+//n is the numner of variables
+char* string_convert(struct Implicant x, int n) {
+
+    char* rep;
+    rep = (char*)malloc(n * sizeof(char));
+
+    if (x.size == 1) {
+        //return binary of the minterm
+        unsigned int m = x.array[0];
+        int q; int r;
+        int filled = 0; int idx = n-1;
+        while (q) {
+            r = m%2;
+            q = m/2;
+            rep[idx++] = r+48;
+            filled++;
+            m = q;
+        }
+        for (int i=0; i<(n-filled); i++) {
+            rep[i] = '0';
+        }
+
+        return rep;
+    }
+
+    else {
+        //call this function with half of the minterms as a seperate implicant
+        struct Implicant x1; Implicaant(x.size/2, &x1);
+        struct Implicant x2; Implicaant(x.size/2, &x2);
+
+        for (int i=0; i<x.size/2; i++) {
+            x1.array[i] = x.array[i];
+            x2.array[i] = x.array[i+x.size/2];
+        }
+
+        char* rep1 = string_convert(x1, n);
+        char* rep2 = string_convert(x2, n);
+
+        //then combine their result
+        for (int i=0; i<n; i++) {
+            if (rep1[i] == rep2[i]) {
+                rep[i] = rep1[i];
+            } else {
+                rep[i] = '-';
+            }
+        }
+
+        return rep;
+    }
+
+}
+

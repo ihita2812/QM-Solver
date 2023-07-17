@@ -21,7 +21,7 @@ extern int equal_implicants(struct Implicant*, struct Implicant*);
 //checks if old is superet of new
 int is_superset(struct Implicant new, struct Implicant old);
 
-const int N; //number of variables
+int N; //number of variables
 // extern const char dash;
 int str_len;
 // int valid_minterms[];
@@ -32,8 +32,11 @@ int str_len;
 extern int num_ones(int m, int n);
 
 //will convert final array of chars ('0' '1' and '-') to array of abc chars
-extern char* string(char* a);
+extern char* abc_convert(char* a);
 
 extern int is_power_of_2(int x);
+
+//converts implicant  to string of '1', '0' or '-'
+char* string_convert(struct Implicant, int n);
 
 #endif

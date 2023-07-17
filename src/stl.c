@@ -5,9 +5,9 @@
 
 void list_init(list* v) {
     // printf("init started\n");
-    v->capacity = 1;
+    v->capacity = 4;
     v->size = 0;
-    v->items = malloc(sizeof(void*));
+    v->items = malloc(sizeof(void*) * 4);
     // if (v->items) printf("init complete\n");
     // else printf("init failed\n");
 }
@@ -117,9 +117,9 @@ void list_sort(list* s) {
 //STACK
 
 void stack_init(stack* s) {
-    s->capacity = 1;
+    s->capacity = 4;
     s->size = 0;
-    s->items = malloc(sizeof(void *));
+    s->items = malloc(sizeof(void*) * 4);
     // if (s->items) printf("init complete\n");
     // else printf("init failed\n");
 }
