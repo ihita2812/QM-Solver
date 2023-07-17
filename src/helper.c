@@ -176,3 +176,9 @@ char* string_convert(struct Implicant x, int n) {
 
 }
 
+void print(struct Implicant x) {
+    int leng = x.size;
+    for (int i=0; i<leng; i++) {
+        printf("%u ", x.array[i]);
+    }
+}

@@ -37,6 +37,8 @@ extern char* abc_convert(char*, char*);
 extern int is_power_of_2(int x);
 
 //converts implicant  to string of '1', '0' or '-'
-char* string_convert(struct Implicant, int n);
+extern char* string_convert(struct Implicant, int n);
+
+extern void print(struct Implicant);
 
 #endif

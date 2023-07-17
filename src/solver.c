@@ -69,37 +69,32 @@ struct BucketStore* find_implicants(list minterms) {
                     struct Implicant* i1 = (struct Implicant*)list_get(&b1->implicants, k);
                     
                     //checking if implicants should be combined
-                    printf("\nsize of each implicant is %d\n", i0->size);
                     int add = 1;
 
                     int diff = 0;
                     char* rep0 = string_convert(*i0, N);
                     char* rep1 = string_convert(*i1, N);
                     for (int temp=0; temp<N; temp++) {
-                        printf("comparing %c and %c\n", rep0[temp], rep1[temp]);
                         if (rep0[temp] != rep1[temp]) diff++;
                         if (diff > 1) {
                             add = 0;
                             break;
                         }
                     }
-                    printf("--comparing this pair of implicants over--\n");
+                    
                     //checking if combined implicant already exists
                     if (add) {
-                        printf("grouped them, checking if duplicate exists\n");
                         Implicaaant(2*(i0->size), (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]), *i0, *i1); // write this function!!!
                         
                         int really_add = 1;
                         for (int temp=0; temp<(nBucket[i]->implicants).size; temp++) {
                             if (equal_implicants((struct Implicant*)list_get(&nBucket[i]->implicants, temp), (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]))) {
                                 really_add = 0;
-                                printf("duplicate exists!\n");
                                 break;
                             }
                         }
 
                         if (really_add) {
-                            printf("duplicate doesnt exist, adding\n");
                             list_add(&nBucket[i]->implicants, (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]));
                             added++;
                         }
@@ -184,49 +179,49 @@ struct Bucket* ess_prime_implicants(list minterms_not_dontcares, list prime_impl
         done_array[temp] = 0;
     }
 
+    int covered_minterms = 0;
+
     //step 1
     //taking the initial essential prime implicants
     for (int i=0; i<minterms_not_dontcares.size; i++) {
         unsigned int m = *(unsigned int*)list_get(&minterms_not_dontcares, i);
-        int covered = 0;
 
-        struct Implicant* current_impl;
-        int current_idx;
-        for (int j=0; j<prime_implicants.size; j++) {
-            struct Implicant* impl = (struct Implicant*)list_get(&prime_implicants, j);
-    
-            for (int k=0; k<impl->size; k++) {
-                if (impl->array[k] == m) {
-                    current_impl = impl;
-                    current_idx = j;
-                    covered++;
-                    break;
+        if (done_array[(int)m] != 1) {
+            
+            int covered = 0;
+
+            struct Implicant* current_impl;
+            int current_idx;
+            for (int j=0; j<prime_implicants.size; j++) {
+                struct Implicant* impl = (struct Implicant*)list_get(&prime_implicants, j);
+        
+                for (int k=0; k<impl->size; k++) {
+                    if (impl->array[k] == m) {
+                        current_impl = impl;
+                        current_idx = j;
+                        covered++;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (covered == 1) {
-            list_add(&ess_primes->implicants, current_impl);
-            list_delete(&prime_implicants, current_idx);
+            if (covered == 1) {
+                //step 1a
+                //all minterms in essential prime implicants are marked as done
+                for (int j=0; j<current_impl->size; j++) {
+                    if ((current_impl->array[j]<=max_minterm) && (done_array[(int)(current_impl->array[j])] != 1)) {
+                        done_array[(int)(current_impl->array[j])] = 1;
+                        covered_minterms++;
+                    }
+                }
+                list_add(&ess_primes->implicants, current_impl);
+                list_delete(&prime_implicants, current_idx);
+            }
+
         }
     }
 
-    
-    int covered_minterms = 0;
     while (covered_minterms != minterms_not_dontcares.size) {
-
-        //step 1a
-        //all minterms in essential prime implicants are marked as done
-        for (int i=0; i<((ess_primes->implicants).size); i++) {
-            struct Implicant* impl = (struct Implicant*)list_get(&ess_primes->implicants, i);
-
-            for (int j=0; j<impl->size; j++) {
-                if ((impl->array[j]<=max_minterm) && (done_array[(int)(impl->array[j])] != 1)) {
-                    done_array[(int)(impl->array[j])] = 1;
-                    covered_minterms++;
-                }
-            }
-        }
 
         if (covered_minterms != minterms_not_dontcares.size) {
 
@@ -266,6 +261,20 @@ struct Bucket* ess_prime_implicants(list minterms_not_dontcares, list prime_impl
             if (max_covered != 0) {
                 list_add(&ess_primes->implicants, max_covering_impl);
             }
+
+            //step 1a
+            //all minterms in essential prime implicants are marked as done
+            for (int i=0; i<((ess_primes->implicants).size); i++) {
+                struct Implicant* impl = (struct Implicant*)list_get(&ess_primes->implicants, i);
+
+                for (int j=0; j<impl->size; j++) {
+                    if ((impl->array[j]<=max_minterm) && (done_array[(int)(impl->array[j])] != 1)) {
+                        done_array[(int)(impl->array[j])] = 1;
+                        covered_minterms++;
+                    }
+                }
+            }
+
 
         }
 
