@@ -79,8 +79,13 @@ int num_ones(int m, int n) {
 }
 
 //takes string of '0' '1' or '-' and converts it to abc format
-char* abc_convert(char* a) {
-    static char s[52];
+char* abc_convert(char* a, char* s) {
+    //static char s[52];
+    // free(s);
+    // s = (char*)malloc(52 * sizeof(char));
+    
+    // printf("received char* %p\n", s);
+    
     int s_ind = 0;
 
     for (int i=0; i<N; i++) {
@@ -96,7 +101,7 @@ char* abc_convert(char* a) {
         } else {
             printf("ERROR: value is other than 0, 1 or -\n");
             printf("Value is: %c.\n", a[i]);
-            char x = 'X';
+            char x = a[i];
             char* ew = &x;
             return ew;
         }
@@ -124,16 +129,20 @@ char* string_convert(struct Implicant x, int n) {
     if (x.size == 1) {
         //return binary of the minterm
         unsigned int m = x.array[0];
-        int q; int r;
+        unsigned int m_copy = m;
+        int q = 2; int r;
         int filled = 0; int idx = n-1;
         while (q) {
-            r = m%2;
-            q = m/2;
-            rep[idx++] = r+48;
+            r = m_copy%2;
+            q = m_copy/2;
+            // printf("remainder is %d, the char of that is %c\n", r, r+48);
+            rep[idx--] = r+48;
+            // printf("assigning %c to %dth index of minterm %u\n", rep[idx+1], idx+1, m);
             filled++;
-            m = q;
+            m_copy = q;
         }
         for (int i=0; i<(n-filled); i++) {
+            // printf("assigning 0 to %dth index of minterm %u\n", i, m);
             rep[i] = '0';
         }
 

@@ -69,31 +69,37 @@ struct BucketStore* find_implicants(list minterms) {
                     struct Implicant* i1 = (struct Implicant*)list_get(&b1->implicants, k);
                     
                     //checking if implicants should be combined
+                    printf("\nsize of each implicant is %d\n", i0->size);
                     int add = 1;
 
                     int diff = 0;
                     char* rep0 = string_convert(*i0, N);
                     char* rep1 = string_convert(*i1, N);
                     for (int temp=0; temp<N; temp++) {
+                        printf("comparing %c and %c\n", rep0[temp], rep1[temp]);
                         if (rep0[temp] != rep1[temp]) diff++;
                         if (diff > 1) {
                             add = 0;
                             break;
                         }
                     }
+                    printf("--comparing this pair of implicants over--\n");
                     //checking if combined implicant already exists
                     if (add) {
+                        printf("grouped them, checking if duplicate exists\n");
                         Implicaaant(2*(i0->size), (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]), *i0, *i1); // write this function!!!
                         
                         int really_add = 1;
                         for (int temp=0; temp<(nBucket[i]->implicants).size; temp++) {
                             if (equal_implicants((struct Implicant*)list_get(&nBucket[i]->implicants, temp), (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]))) {
                                 really_add = 0;
+                                printf("duplicate exists!\n");
                                 break;
                             }
                         }
 
                         if (really_add) {
+                            printf("duplicate doesnt exist, adding\n");
                             list_add(&nBucket[i]->implicants, (struct Implicant*)list_get(&implicant_pointer_array, minterms.size + added + added_array[grouping]));
                             added++;
                         }
@@ -114,7 +120,7 @@ struct BucketStore* find_implicants(list minterms) {
             *pptr = *nptr;
             added_array[grouping+1] = added + added_array[grouping];
         } else {
-            for (int i=0; i<size_of_bucket-1; i++) {
+            for (int i=0; i<size_of_bucket; i++) {
                 stack_push(&(implicantBucketStore->store), nBucket[i]);
             }    
             break;

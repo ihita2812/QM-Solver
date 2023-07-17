@@ -114,7 +114,6 @@ int main() {
     //-----------------------------INITIALISATION-----------------------------
     // struct list terms;
     // list_init(&terms);
-    
     // unsigned int a=0;
     // list_add(&terms, &a);
     // unsigned int b=1;
@@ -195,10 +194,23 @@ int main() {
     //---------------------------------------------------------------------------------------------------    
 
     //-----------------------------GIVING PROPER OUTPUT-----------------------------
+    printf("\noutput is:\n");
+    char** container;
+    container = (char**)malloc(sizeof(char*) * (lol3->implicants).size);
+    for (int i=0; i<(lol3->implicants).size; i++) {
+        char* x;
+        x = (char*)malloc(52 * sizeof(char));
+        container[i] = x + i * 52 * sizeof(char*);
+    }
     for (int i=0; i<(lol3->implicants).size; i++) {
         struct Implicant* h = (struct Implicant*)list_get(&lol3->implicants, i);
-        char* part = abc_convert(string_convert(*h, N));
-        printf("%s + ", part);
+        container[i] = abc_convert(string_convert(*h, N), container[i]);
+        // printf("\nlength is %d : ", str_len);
+        for (int j=0; j<str_len; j++) {
+            printf("%c", container[i][j]);
+        }
+        if (i != ((lol3->implicants).size-1)) printf(" + ");
+        // else printf("%s + ", container[i]);
     }
     //------------------------------------------------------------------------------
     

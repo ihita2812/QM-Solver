@@ -32,7 +32,7 @@ int str_len;
 extern int num_ones(int m, int n);
 
 //will convert final array of chars ('0' '1' and '-') to array of abc chars
-extern char* abc_convert(char* a);
+extern char* abc_convert(char*, char*);
 
 extern int is_power_of_2(int x);
 
