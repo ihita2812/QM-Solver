@@ -15,16 +15,14 @@ int compare(const void* num1, const void* num2) {
 void Implicaant(int _size, struct Implicant* i) {
     i->size = _size;
     i->array = (unsigned int*)malloc(_size * sizeof(unsigned int));
-    // if (i->array) printf("DEBUG: implicant(1) was called and mp fully done\n");
-    // else printf("oops for implicant(1)!\n");
-    // *i->array = 0;
-    
+    if (i->array == NULL) {printf("Malloc failure\nCODE: 14\n"); exit(14);}
 }
 
 void Implicaaant(int _size, struct Implicant* i, struct Implicant i1, struct Implicant i2) {
 
     (*i).size = _size;
     (*i).array = (unsigned int*)malloc(_size * sizeof(unsigned int));
+    if (i->array == NULL) {printf("Malloc failure\nCODE: 15\n"); exit(15);}
     
     for (int temp = 0; temp < i1.size; temp++) {
         i->array[temp] = i1.array[temp];
@@ -80,11 +78,6 @@ int num_ones(int m, int n) {
 
 //takes string of '0' '1' or '-' and converts it to abc format
 char* abc_convert(char* a, char* s) {
-    //static char s[52];
-    // free(s);
-    // s = (char*)malloc(52 * sizeof(char));
-    
-    // printf("received char* %p\n", s);
     
     int s_ind = 0;
 
@@ -125,6 +118,7 @@ char* string_convert(struct Implicant x, int n) {
 
     char* rep;
     rep = (char*)malloc(n * sizeof(char));
+    if (rep == NULL) {printf("Malloc failure\nCODE: 16\n"); exit(16);}
 
     if (x.size == 1) {
         //return binary of the minterm

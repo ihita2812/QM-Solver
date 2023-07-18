@@ -14,7 +14,7 @@ C algorithm for step-by-step, direct execution of the [Quine-McCluskey Method](h
     - dont-cares
     - maxterms
 7. add comments
-8. account for failing of malloc
+8. ~~account for failing of malloc~~
 9. makefile
 10. gui
 

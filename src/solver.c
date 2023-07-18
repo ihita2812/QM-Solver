@@ -13,6 +13,7 @@ struct BucketStore* find_implicants(list minterms) {
     struct BucketStore* implicantBucketStore; //BucketStore to be returned
     
     implicantBucketStore = (struct BucketStore*)malloc(sizeof(struct BucketStore*));
+    if (implicantBucketStore == NULL) {printf("Malloc failure\nCODE: 6\n"); exit(6);}
     stack_init(&(implicantBucketStore->store));
 
     //initial grouping of minterms according to number of 1s
@@ -25,6 +26,7 @@ struct BucketStore* find_implicants(list minterms) {
 
     for (int i=0; i<size_of_bucket; i++) {
         pBucket[i] = (struct Bucket*)malloc(sizeof(list));
+        if (pBucket[i] == NULL) {printf("Malloc failure\nCODE: 7\n"); exit(7);}
         list_init(&pBucket[i]->implicants);
     }
 
@@ -35,6 +37,7 @@ struct BucketStore* find_implicants(list minterms) {
         struct Implicant* x;
         list_add(&implicant_pointer_array, x + sizeof(struct Implicant*) * i);
         list_set(&implicant_pointer_array, i, (struct Implicant*)malloc(sizeof(struct Implicant)));
+        if (list_get(&implicant_pointer_array, i) == NULL) {printf("Malloc failure\nCODE: 8\n"); exit(8);}
     }
 
     for (int i=0; i<minterms.size; i++) {
@@ -53,9 +56,11 @@ struct BucketStore* find_implicants(list minterms) {
 
         struct Bucket** nBucket;
         nBucket = (struct Bucket**)malloc((size_of_bucket-1) * sizeof(struct Bucket*));
+        if (nBucket == NULL) {printf("Malloc failure\nCODE: 9\n"); exit(9);}
 
         for (int i=0; i<size_of_bucket-1; i++) {
             nBucket[i] = (struct Bucket*)malloc(sizeof(list));
+            if (nBucket[i] == NULL) {printf("Malloc failure\nCODE: 10\n"); exit(10);}
             list_init(&nBucket[i]->implicants);
         }
 
@@ -131,6 +136,7 @@ struct BucketStore* find_implicants(list minterms) {
 struct Bucket* prime_implicants(struct BucketStore all_implicants) {
     struct Bucket* primes;
     primes = (struct Bucket*)malloc(sizeof(struct Bucket*));
+    if (primes == NULL) {printf("Malloc failure\nCODE: 11\n"); exit(11);}
     list_init(&primes->implicants);
     
     stack implicants;
@@ -166,6 +172,7 @@ struct Bucket* prime_implicants(struct BucketStore all_implicants) {
 struct Bucket* ess_prime_implicants(list minterms_not_dontcares, list prime_implicants) {
     struct Bucket* ess_primes;
     ess_primes = (struct Bucket*)malloc(sizeof(struct Bucket*));
+    if (ess_primes == NULL) {printf("Malloc failure\nCODE: 12\n"); exit(12);}
     list_init(&ess_primes->implicants);
 
     unsigned int max_minterm = *(unsigned int*)list_get(&minterms_not_dontcares, list_max(&minterms_not_dontcares));
@@ -175,6 +182,7 @@ struct Bucket* ess_prime_implicants(list minterms_not_dontcares, list prime_impl
     //"done" means atleast one implicant in ess_primes coveres it
     int* done_array;
     done_array = (int*)malloc(sizeof(int) * (int)(max_minterm+1));
+    if (done_array == NULL) {printf("Malloc failure\nCODE: 13\n"); exit(13);}
     for (int temp=0; temp<=max_minterm; temp++) {
         done_array[temp] = 0;
     }

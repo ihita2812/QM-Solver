@@ -8,8 +8,7 @@ void list_init(list* v) {
     v->capacity = 4;
     v->size = 0;
     v->items = malloc(sizeof(void*) * 4);
-    // if (v->items) printf("init complete\n");
-    // else printf("init failed\n");
+    if (v->items == NULL) {printf("Malloc failure\nCODE: 17\n"); exit(17);}
 }
 
 int list_size(list* v) {
@@ -22,6 +21,7 @@ static void list_resize(list* v, int capacity) {
 #endif
  
     void** items = realloc(v->items, sizeof(void*) * capacity);
+    if (items == NULL) {printf("Realloc failure\nCODE: 18\n"); exit(18);}
     if (items) {
         v->items = items;
         v->capacity = capacity;
@@ -120,8 +120,7 @@ void stack_init(stack* s) {
     s->capacity = 4;
     s->size = 0;
     s->items = malloc(sizeof(void*) * 4);
-    // if (s->items) printf("init complete\n");
-    // else printf("init failed\n");
+    if (s->items == NULL) {printf("Malloc failure\nCODE: 19\n"); exit(19);}
 }
 
 static void stack_resize(stack* s, int capacity) {
@@ -130,6 +129,7 @@ static void stack_resize(stack* s, int capacity) {
 #endif
  
     void** items = realloc(s->items, sizeof(void *) * capacity);
+    if (items == NULL) {printf("Realloc failure\nCODE: 20\n"); exit(20);}
     if (items) {
         s->items = items;
         s->capacity = capacity;

@@ -67,7 +67,9 @@ int main() {
         }
         int size_of_array = pow(2, ceil(log2(*((unsigned int*)list_get(&maxterms, list_max(&maxterms))))));
         arr = (unsigned int*)malloc(sizeof(unsigned int) * size_of_array);
+        if (arr == NULL) {printf("Malloc failure\nCODE: 2\n"); exit(2);}
         int* arr_min = (int*)malloc(sizeof(int) * size_of_array);
+        if (arr_min == NULL) {printf("Malloc failure\nCODE: 3\n"); exit(3);}
         for (int i=0; i<size_of_array; i++) {
             arr[i] = i;
             arr_min[i] = 1;
@@ -197,9 +199,11 @@ int main() {
     printf("\noutput is:\n");
     char** container;
     container = (char**)malloc(sizeof(char*) * (lol3->implicants).size);
+    if (container == NULL) {printf("Malloc failure\nCODE: 4\n"); exit(4);}
     for (int i=0; i<(lol3->implicants).size; i++) {
         char* x;
         x = (char*)malloc(52 * sizeof(char));
+        if (x == NULL) {printf("Malloc failure\nCODE: 5\n"); exit(5);}
         container[i] = x + i * 52 * sizeof(char*);
     }
     for (int i=0; i<(lol3->implicants).size; i++) {
