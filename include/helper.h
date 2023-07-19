@@ -21,9 +21,9 @@ extern int equal_implicants(struct Implicant*, struct Implicant*);
 //checks if old is superet of new
 int is_superset(struct Implicant new, struct Implicant old);
 
-int N; //number of variables
+static int N; //number of variables
 // extern const char dash;
-int str_len;
+static int str_len;
 // int valid_minterms[];
 // const int V; //number of valid minterms
 

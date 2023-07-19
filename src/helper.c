@@ -107,9 +107,10 @@ char* abc_convert(char* a, char* s) {
 
 int is_power_of_2(int x) {
     if (x<0) return 0;
-    
-    double log = log2(x);
-    if (floor(log) == ceil(log)) return 1;
+
+    float l;
+    l = log2(x);
+    if (floor(l) == ceil(l)) return 1;
     else return 0;
 }
 

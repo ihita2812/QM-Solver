@@ -15,23 +15,24 @@ C algorithm for step-by-step, direct execution of the [Quine-McCluskey Method](h
     - ~~maxterms~~
 7. add comments
 8. ~~account for failing of malloc~~
-9. makefile
+9. ~~makefile~~
 10. gui
 
-## How to execute
+## How to build
 
-### To build
+### To compile
 ```
-cd src
-make
-```
-
-### To run
-```
-make run
+$ cd src
+$ make
 ```
 
 ### To clean
 ```
 make clean
 ```
+
+## How to execute
+
+1. Enter the following command to run the program:
+    `../bin/myqm`
+2. Enter inputs properly as aked by the program.
