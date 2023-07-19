@@ -74,16 +74,16 @@ struct BucketStore* find_implicants(list minterms) {
                     struct Implicant* i1 = (struct Implicant*)list_get(&b1->implicants, k);
                     
                     //checking if implicants should be combined
-                    int add = 1;
+                    int add = 0;
 
-                    int diff = 0;
-                    char* rep0 = string_convert(*i0, N);
-                    char* rep1 = string_convert(*i1, N);
-                    for (int temp=0; temp<N; temp++) {
-                        if (rep0[temp] != rep1[temp]) diff++;
-                        if (diff > 1) {
-                            add = 0;
-                            break;
+                    int diff = i1->array[0] - i0->array[0];
+                    if (is_power_of_2(diff)) {
+                        add = 1;
+                        for (int temp=1; temp<i0->size; temp++) {
+                            if ((i1->array[temp] - i0->array[temp]) != diff) {
+                                add = 0;
+                                break;
+                            }
                         }
                     }
                     

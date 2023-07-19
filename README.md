@@ -12,10 +12,26 @@ C algorithm for step-by-step, direct execution of the [Quine-McCluskey Method](h
 5. ~~why is [this case](https://atozmath.com/example/KMap.aspx?q=quine&q1=E3) not working?~~
 6. check with other examples:
     - dont-cares
-    - maxterms
+    - ~~maxterms~~
 7. add comments
 8. ~~account for failing of malloc~~
 9. makefile
 10. gui
 
-## How to build
+## How to execute
+
+### To build
+```
+cd src
+make
+```
+
+### To run
+```
+make run
+```
+
+### To clean
+```
+make clean
+```
