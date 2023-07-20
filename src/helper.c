@@ -77,11 +77,11 @@ int num_ones(int m, int n) {
 }
 
 //takes string of '0' '1' or '-' and converts it to abc format
-char* abc_convert(char* a, char* s) {
+char* abc_convert(char* a, char* s, int num_vars) {
     
     int s_ind = 0;
 
-    for (int i=0; i<N; i++) {
+    for (int i=0; i<num_vars; i++) {
         if (a[i] == '0') {
             s[s_ind] = 97+i;
             s[s_ind+1] = 39;
@@ -100,7 +100,7 @@ char* abc_convert(char* a, char* s) {
         }
     }
 
-    str_len = s_ind;
+    // str_len = s_ind;
 
     return s;
 }
@@ -177,4 +177,8 @@ void print(struct Implicant x) {
     for (int i=0; i<leng; i++) {
         printf("%u ", x.array[i]);
     }
+}
+
+int N(list* minterms) {
+    return ceil(log2(*((unsigned int*)list_get(minterms, list_max(minterms)))));
 }

@@ -28,11 +28,10 @@ $ make
 
 ### To clean
 ```
-make clean
+$ make clean
 ```
 
 ## How to execute
 
-1. Enter the following command to run the program:
-    `../bin/myqm`
-2. Enter inputs properly as aked by the program.
+1. Enter the following command to run the program- `$ ../bin/myqm`
+2. Enter inputs properly as asked by the program.

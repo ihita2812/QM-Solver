@@ -15,11 +15,7 @@ int list_size(list* v) {
     return v->size;
 }
 
-static void list_resize(list* v, int capacity) {
-#ifdef DEBUG_ON
-    printf("list_resize: %d to %d\n", v->capacity, capacity);
-#endif
- 
+static void list_resize(list* v, int capacity) { 
     void** items = realloc(v->items, sizeof(void*) * capacity);
     if (items == NULL) {printf("Realloc failure\nCODE: 18\n"); exit(18);}
     if (items) {
@@ -103,7 +99,6 @@ void list_swap(list* s, int i, int j) {
 }
 
 void list_sort(list* s) {
-    printf("\nDEBUG: list_sort was called\n");
     int leng = s->size;
     for (int i=0; i<leng-1; i++) {
         for (int j=i+1; j<leng; j++) {
@@ -123,11 +118,7 @@ void stack_init(stack* s) {
     if (s->items == NULL) {printf("Malloc failure\nCODE: 19\n"); exit(19);}
 }
 
-static void stack_resize(stack* s, int capacity) {
-#ifdef DEBUG_ON
-    printf("list_resize: %d to %d\n", v->capacity, capacity);
-#endif
- 
+static void stack_resize(stack* s, int capacity) { 
     void** items = realloc(s->items, sizeof(void *) * capacity);
     if (items == NULL) {printf("Realloc failure\nCODE: 20\n"); exit(20);}
     if (items) {

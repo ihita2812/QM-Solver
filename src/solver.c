@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "solver.h"
 
-struct BucketStore* find_implicants(list minterms) {
+struct BucketStore* find_implicants(list minterms, int num_vars) {
     struct BucketStore* implicantBucketStore; //BucketStore to be returned
     
     implicantBucketStore = (struct BucketStore*)malloc(sizeof(struct BucketStore*));
@@ -18,7 +18,7 @@ struct BucketStore* find_implicants(list minterms) {
 
     //initial grouping of minterms according to number of 1s
 
-    int size_of_bucket = N+1;
+    int size_of_bucket = num_vars+1;
     
     struct Bucket** pBucket; //an array of pointers to buckets
     pBucket = (struct Bucket**)calloc(size_of_bucket , sizeof(struct Bucket*));
@@ -44,7 +44,7 @@ struct BucketStore* find_implicants(list minterms) {
         unsigned int m = *(unsigned int*)list_get(&minterms, i);
         Implicaant(1, (struct Implicant*)list_get(&implicant_pointer_array, i));
         ((struct Implicant*)list_get(&implicant_pointer_array, i))->array[0] = m;
-        int ones = num_ones(m, N);
+        int ones = num_ones(m, num_vars);
         list_add(&pBucket[ones]->implicants, (struct Implicant*)list_get(&implicant_pointer_array, i));
     }
     

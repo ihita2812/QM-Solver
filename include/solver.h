@@ -3,7 +3,7 @@
 
 #include "helper.h"
 
-extern struct BucketStore* find_implicants(list);
+extern struct BucketStore* find_implicants(list, int);
 
 extern struct Bucket* prime_implicants(struct BucketStore);
 

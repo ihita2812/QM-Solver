@@ -14,6 +14,10 @@ starting the program
 unsigned int inputs[4097];
 unsigned int* arr;
 
+int num_vars;
+
+// int num_vars;
+
 int main() {
 
     printf("Enter 1 for minterms and 0 for maxterms: ");
@@ -36,7 +40,7 @@ int main() {
         printf("Enter ");
         if (mins) printf("minterm");
         else printf("maxterm");
-        printf("number %d : ", i+1);
+        printf(" %d : ", i+1);
         scanf("%u", &inputs[i]);
     }
 
@@ -92,7 +96,7 @@ int main() {
         list_add(&minterms, &inputs[i]);
     }
 
-    N = ceil(log2(*((unsigned int*)list_get(&minterms, list_max(&minterms)))));
+    num_vars = N(&minterms);
 
     // printf("Enter number of variables: ");
     // scanf("%d", &N);
@@ -142,7 +146,7 @@ int main() {
 
     
     //-----------------------------FOR TESTING FIND_IMPLICANTS FUNCTION-----------------------------
-    struct BucketStore* lol = find_implicants(minterms);
+    struct BucketStore* lol = find_implicants(minterms, num_vars);
     printf("no. of implicants: %d\n", (lol->store).size);
 
     while (lol->store.size) {
@@ -167,7 +171,7 @@ int main() {
 
 
     //-----------------------------FOR TESTING PRIME_IMPLICANTS FUNCTION-----------------------------
-    struct Bucket* lol2 = prime_implicants(*find_implicants(minterms));
+    struct Bucket* lol2 = prime_implicants(*find_implicants(minterms, num_vars));
     printf("\nno. of prime implicants: %d\n", (lol2->implicants).size);
     
     for (int i=0; i<(lol2->implicants).size; i++) {
@@ -208,11 +212,12 @@ int main() {
     }
     for (int i=0; i<(lol3->implicants).size; i++) {
         struct Implicant* h = (struct Implicant*)list_get(&lol3->implicants, i);
-        container[i] = abc_convert(string_convert(*h, N), container[i]);
+        container[i] = abc_convert(string_convert(*h, num_vars), container[i], num_vars);
         // printf("\nlength is %d : ", str_len);
-        for (int j=0; j<str_len; j++) {
-            printf("%c", container[i][j]);
-        }
+        // for (int j=0; j<str_len; j++) {
+        //     printf("%c", container[i][j]);
+        // }
+        printf("%s", container[i]);
         if (i != ((lol3->implicants).size-1)) printf(" + ");
         // else printf("%s + ", container[i]);
     }

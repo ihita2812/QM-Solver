@@ -19,20 +19,17 @@ extern void Implicaaant(int _size, struct Implicant*, struct Implicant, struct I
 extern int equal_implicants(struct Implicant*, struct Implicant*);
 
 //checks if old is superet of new
-int is_superset(struct Implicant new, struct Implicant old);
+extern int is_superset(struct Implicant new, struct Implicant old);
 
-static int N; //number of variables
-// extern const char dash;
-static int str_len;
-// int valid_minterms[];
-// const int V; //number of valid minterms
+//will give no. of variables from list of minterms
+extern int N(list*);
 
 //m is the minterm number (0 to 2^(N-1))
-//n is N
+//n is number of variables
 extern int num_ones(int m, int n);
 
 //will convert final array of chars ('0' '1' and '-') to array of abc chars
-extern char* abc_convert(char*, char*);
+extern char* abc_convert(char*, char*, int);
 
 extern int is_power_of_2(int x);
 
