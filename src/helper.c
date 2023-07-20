@@ -1,5 +1,35 @@
 #include "helper.h"
 
+//----------------------------------------GENERAL UTILITY FUNCTIONS----------------------------------------
+
+//will give no. of variables from list of minterms
+int N(list* minterms) {
+    return ceil(log2(*((unsigned int*)list_get(minterms, list_max(minterms)))));
+}
+
+//m is the minterm number (0 to 2^(N-1))
+//n is N
+int num_ones(int m, int n) {
+
+    if (m == 0) return 0;
+
+    int this = pow(2, n-1);
+    if (m >= this) {
+        return num_ones(m-this, n)+1;
+    } else {
+        return num_ones(m, n-1);
+    }
+}
+
+int is_power_of_2(int x) {
+    if (x<0) return 0;
+
+    float l;
+    l = log2(x);
+    if (floor(l) == ceil(l)) return 1;
+    else return 0;
+}
+
 //comparator for qsort
 int compare(const void* num1, const void* num2) {  
     unsigned int a = *(unsigned int*) num1;  
@@ -12,12 +42,16 @@ int compare(const void* num1, const void* num2) {
     return 0;  
 }
 
+//----------------------------------------IMPLICANT UTILITY FUNCTIONS----------------------------------------
+
+//initialises implicant i with size = _size
 void Implicaant(int _size, struct Implicant* i) {
     i->size = _size;
     i->array = (unsigned int*)malloc(_size * sizeof(unsigned int));
     if (i->array == NULL) {printf("Malloc failure\nCODE: 14\n"); exit(14);}
 }
 
+//initialises implicant i with size = _size and contents = union of i1 and i2
 void Implicaaant(int _size, struct Implicant* i, struct Implicant i1, struct Implicant i2) {
 
     (*i).size = _size;
@@ -34,6 +68,7 @@ void Implicaaant(int _size, struct Implicant* i, struct Implicant i1, struct Imp
     qsort(i->array, _size, sizeof(unsigned int), compare);
 }
 
+//checks if two implicants are equal to avoid duplicates
 int equal_implicants(struct Implicant* i1, struct Implicant* i2) {
     if (i1->size != i2->size) return 0;
 
@@ -62,19 +97,7 @@ int is_superset(struct Implicant new, struct Implicant old) {
     return 1;
 }
 
-//m is the minterm number (0 to 2^(N-1))
-//n is N
-int num_ones(int m, int n) {
-
-    if (m == 0) return 0;
-
-    int this = pow(2, n-1);
-    if (m >= this) {
-        return num_ones(m-this, n)+1;
-    } else {
-        return num_ones(m, n-1);
-    }
-}
+//----------------------------------------FUNCTIONS FOR OUTPUT----------------------------------------
 
 //takes string of '0' '1' or '-' and converts it to abc format
 char* abc_convert(char* a, char* s, int num_vars) {
@@ -103,15 +126,6 @@ char* abc_convert(char* a, char* s, int num_vars) {
     // str_len = s_ind;
 
     return s;
-}
-
-int is_power_of_2(int x) {
-    if (x<0) return 0;
-
-    float l;
-    l = log2(x);
-    if (floor(l) == ceil(l)) return 1;
-    else return 0;
 }
 
 //converts implicant x to string of '1', '0' or '-'
@@ -172,13 +186,10 @@ char* string_convert(struct Implicant x, int n) {
 
 }
 
+//for debugging
 void print(struct Implicant x) {
     int leng = x.size;
     for (int i=0; i<leng; i++) {
         printf("%u ", x.array[i]);
     }
-}
-
-int N(list* minterms) {
-    return ceil(log2(*((unsigned int*)list_get(minterms, list_max(minterms)))));
 }

@@ -1,25 +1,31 @@
-/*
-
-PURPOSE OF FILE:
-Handling input/output
-and
-starting the program
-
-*/
-
 #include <stdio.h>
 #include <string.h>
 #include "solver.h"
 
-unsigned int inputs[4097];
+unsigned int inputs[4097]; //stores minterm/maxterms given by user
 unsigned int* arr;
 
-int num_vars;
+int num_vars; //number of variables in boolean expr
 
-// int num_vars;
+int DETAIL = 0; //flag for if detail has to be shown or not
 
-int main() {
+int main(int argc, char** argv) {
 
+    if (argc == 2) {
+        if (!strcmp(argv[1], "detail")) DETAIL = 1;
+        else {
+            printf("Incorrect argument(s) to program call.");
+            exit(1);
+        }
+    }
+
+    else if (argc > 2) {
+        printf("Incorrect argument(s) to program call.");
+        exit(1);
+    }
+
+    //-------------------------------------------------------------------------------
+    
     printf("Enter 1 for minterms and 0 for maxterms: ");
     int mins;
     scanf("%d", &mins);
@@ -28,6 +34,8 @@ int main() {
         exit(1);
     }
 
+    //-------------------------------------------------------------------------------
+    
     int num_ins;
 
     printf("Enter no. of ");
@@ -44,20 +52,26 @@ int main() {
         scanf("%u", &inputs[i]);
     }
 
+    //-------------------------------------------------------------------------------
+    
     int dont_cares;
 
     printf("Enter no. of dont-cares : ");
     scanf("%d", &dont_cares);
 
     for (int i=num_ins; i<num_ins+dont_cares; i++) {
-        printf("Enter dont-care number %d : ", i+1);
+        printf("Enter dont-care %d : ", i+1);
         scanf("%u", &inputs[i]);
     }
 
+    //-------------------------------------------------------------------------------
+    
     list minterms; list_init(&minterms);
     list minterms_without_dontcares; list_init(&minterms_without_dontcares);
     list maxterms; list_init(&maxterms);
 
+    //-------------------------------------------------------------------------------
+    
     if (mins) {
         for (int i=0; i<num_ins; i++) {
             list_add(&minterms, &inputs[i]);
@@ -65,6 +79,8 @@ int main() {
         }
     }
 
+    //-------------------------------------------------------------------------------
+    
     else {
         for (int i=0; i<num_ins+dont_cares; i++) {
             list_add(&maxterms, &inputs[i]);
@@ -96,62 +112,17 @@ int main() {
         list_add(&minterms, &inputs[i]);
     }
 
+    //-------------------------------------------------------------------------------
+    
     num_vars = N(&minterms);
 
-    // printf("Enter number of variables: ");
-    // scanf("%d", &N);
-    
-    //-----------------------------FOR TESTING STRING() FUNCTION-----------------------------
-    // char arr[4];
-    // arr[0] = '1';
-    // arr[1] = '0';
-    // arr[2] = dash;
-    // arr[3] = '0';
-    // char* ans = string(arr);
-    // for (int i=0; i<str_len; i++) {
-    //     printf("%c", *(ans+i));
-    // }
-    // printf("\n");
-    //---------------------------------------------------------------------------------------
+    if (DETAIL) {
 
-
-
-
-    //-----------------------------INITIALISATION-----------------------------
-    // struct list terms;
-    // list_init(&terms);
-    // unsigned int a=0;
-    // list_add(&terms, &a);
-    // unsigned int b=1;
-    // list_add(&terms, &b);
-    // unsigned int c=2;
-    // list_add(&terms, &c);
-    // unsigned int d=5;
-    // list_add(&terms, &d);
-    // unsigned int e=6;
-    // list_add(&terms, &e);
-    // unsigned int f=7;
-    // list_add(&terms, &f);
-    // unsigned int g=8;
-    // list_add(&terms, &g);
-    // unsigned int h=9;
-    // list_add(&terms, &h);
-    // unsigned int i=10;
-    // list_add(&terms, &i);
-    // unsigned int j=14;
-    // list_add(&terms, &j);
-    //------------------------------------------------------------------------
-    
-
-
-    
     //-----------------------------FOR TESTING FIND_IMPLICANTS FUNCTION-----------------------------
     struct BucketStore* lol = find_implicants(minterms, num_vars);
-    printf("no. of implicants: %d\n", (lol->store).size);
+    printf("\nNo. of implicants: %d\n", (lol->store).size);
 
     while (lol->store.size) {
-        // printf("Level %d\n\n", i);
-
         struct Bucket* is = (struct Bucket*)stack_top(&(lol->store));
         for (int temp=0; temp<is->implicants.size; temp++) {
             struct Implicant* h = (struct Implicant*)list_get(&is->implicants, temp);
@@ -166,13 +137,9 @@ int main() {
     
     //----------------------------------------------------------------------------------------------
 
-
-
-
-
     //-----------------------------FOR TESTING PRIME_IMPLICANTS FUNCTION-----------------------------
     struct Bucket* lol2 = prime_implicants(*find_implicants(minterms, num_vars));
-    printf("\nno. of prime implicants: %d\n", (lol2->implicants).size);
+    printf("\nNo. of prime implicants: %d\n", (lol2->implicants).size);
     
     for (int i=0; i<(lol2->implicants).size; i++) {
         struct Implicant* h = (struct Implicant*)list_get(&lol2->implicants, i);
@@ -183,12 +150,9 @@ int main() {
     }
     //-----------------------------------------------------------------------------------------------
 
-
-
-
     //-----------------------------FOR TESTING ESS_PRIME_IMPLICANTS FUNCTION-----------------------------
     struct Bucket* lol3 = ess_prime_implicants(minterms_without_dontcares, lol2->implicants);
-    printf("\nno. of essential prime implicants: %d\n", (lol3->implicants).size);
+    printf("\nNo. of essential prime implicants: %d\n", (lol3->implicants).size);
 
     for (int i=0; i<(lol3->implicants).size; i++) {
         struct Implicant* h = (struct Implicant*)list_get(&lol3->implicants, i);
@@ -199,32 +163,29 @@ int main() {
     }
     //---------------------------------------------------------------------------------------------------    
 
+    }
+
+
     //-----------------------------GIVING PROPER OUTPUT-----------------------------
-    printf("\noutput is:\n");
+    printf("\n\nMinimised boolean expression:\n");
+
     char** container;
-    container = (char**)malloc(sizeof(char*) * (lol3->implicants).size);
+    struct Bucket* ans = ess_prime_implicants(minterms_without_dontcares, (prime_implicants(*find_implicants(minterms, num_vars)))->implicants);
+    container = (char**)malloc(sizeof(char*) * (ans->implicants).size);
     if (container == NULL) {printf("Malloc failure\nCODE: 4\n"); exit(4);}
-    for (int i=0; i<(lol3->implicants).size; i++) {
+    for (int i=0; i<(ans->implicants).size; i++) {
         char* x;
         x = (char*)malloc(52 * sizeof(char));
         if (x == NULL) {printf("Malloc failure\nCODE: 5\n"); exit(5);}
         container[i] = x + i * 52 * sizeof(char*);
     }
-    for (int i=0; i<(lol3->implicants).size; i++) {
-        struct Implicant* h = (struct Implicant*)list_get(&lol3->implicants, i);
+    for (int i=0; i<(ans->implicants).size; i++) {
+        struct Implicant* h = (struct Implicant*)list_get(&ans->implicants, i);
         container[i] = abc_convert(string_convert(*h, num_vars), container[i], num_vars);
-        // printf("\nlength is %d : ", str_len);
-        // for (int j=0; j<str_len; j++) {
-        //     printf("%c", container[i][j]);
-        // }
         printf("%s", container[i]);
-        if (i != ((lol3->implicants).size-1)) printf(" + ");
-        // else printf("%s + ", container[i]);
+        if (i != ((ans->implicants).size-1)) printf(" + ");
     }
     //------------------------------------------------------------------------------
-    
-
-
 
     return 0;
 }
